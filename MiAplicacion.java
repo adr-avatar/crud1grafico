@@ -15,7 +15,7 @@ import java.awt.event.ActionListener;
 
 public class MiAplicacion extends JFrame {
     private CardLayout cardLayout;
-    private JPanel panelPrincipal;  // Mover a variable de instancia para usarla en otros métodos
+    private JPanel panelPrincipal;  // Panel principal para cambiar entre formularios
 
     public MiAplicacion() {
         // Configuración del JFrame
@@ -32,15 +32,18 @@ public class MiAplicacion extends JFrame {
         panelOpciones.setLayout(new GridLayout(4, 1));
         String[] opciones = { "Opción 1", "Opción 2", "Opción 3", "Opción 4" };
 
-        for (String opcion : opciones) {
+        // Crear un botón para cada opción y vincularlo a un formulario específico
+        for (int i = 0; i < opciones.length; i++) {
+            String opcion = opciones[i];
             JButton boton = new JButton(opcion);
+            int opcionIndex = i + 1; // Para pasar el índice de la opción (1 a 4)
             boton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    // Cerrar el panel de opciones y abrir el formulario
-                    JPanel formularioPanel = crearFormularioPanel();
-                    panelPrincipal.add(formularioPanel, "Formulario");
-                    cardLayout.show(panelPrincipal, "Formulario");
+                    // Mostrar el formulario correspondiente a la opción seleccionada
+                    JPanel formularioPanel = crearFormularioPorOpcion(opcionIndex);
+                    panelPrincipal.add(formularioPanel, "Formulario" + opcionIndex);
+                    cardLayout.show(panelPrincipal, "Formulario" + opcionIndex);
                     panelPrincipal.revalidate();
                     panelPrincipal.repaint();
                 }
@@ -58,23 +61,88 @@ public class MiAplicacion extends JFrame {
         cardLayout.show(panelPrincipal, "Opciones");
     }
 
-    private JPanel crearFormularioPanel() {
+    // Método que devuelve el formulario según la opción seleccionada
+    private JPanel crearFormularioPorOpcion(int opcion) {
+        switch (opcion) {
+            case 1:
+                return crearFormularioPanelOpcion1();
+            case 2:
+                return crearFormularioPanelOpcion2();
+            case 3:
+                return crearFormularioPanelOpcion3();
+            case 4:
+                return crearFormularioPanelOpcion4();
+            default:
+                return new JPanel();  // Panel vacío por defecto
+        }
+    }
+
+    // Formularios para cada opción
+
+    private JPanel crearFormularioPanelOpcion1() {
         JPanel formularioPanel = new JPanel();
-        formularioPanel.setLayout(new GridLayout(4, 2));  // Aumentamos a 4 filas para agregar el botón Cancelar
+        formularioPanel.setLayout(new GridLayout(4, 2));  // 4 filas, 2 columnas
 
-        // Campos del formulario
-        formularioPanel.add(new JLabel("Campo 1:"));
+        formularioPanel.add(new JLabel("Campo 1 (Opción 1):"));
         formularioPanel.add(new JTextField(15));
 
-        formularioPanel.add(new JLabel("Campo 2:"));
+        formularioPanel.add(new JLabel("Campo 2 (Opción 1):"));
         formularioPanel.add(new JTextField(15));
 
+        agregarBotonesFormulario(formularioPanel, "Formulario 1");
+        return formularioPanel;
+    }
+
+    private JPanel crearFormularioPanelOpcion2() {
+        JPanel formularioPanel = new JPanel();
+        formularioPanel.setLayout(new GridLayout(4, 2));
+
+        formularioPanel.add(new JLabel("Campo 1 (Opción 2):"));
+        formularioPanel.add(new JTextField(15));
+
+        formularioPanel.add(new JLabel("Campo 2 (Opción 2):"));
+        formularioPanel.add(new JTextField(15));
+
+        agregarBotonesFormulario(formularioPanel, "Formulario 2");
+        return formularioPanel;
+    }
+
+    private JPanel crearFormularioPanelOpcion3() {
+        JPanel formularioPanel = new JPanel();
+        formularioPanel.setLayout(new GridLayout(4, 2));
+
+        formularioPanel.add(new JLabel("Campo 1 (Opción 3):"));
+        formularioPanel.add(new JTextField(15));
+
+        formularioPanel.add(new JLabel("Campo 2 (Opción 3):"));
+        formularioPanel.add(new JTextField(15));
+
+        agregarBotonesFormulario(formularioPanel, "Formulario 3");
+        return formularioPanel;
+    }
+
+    private JPanel crearFormularioPanelOpcion4() {
+        JPanel formularioPanel = new JPanel();
+        formularioPanel.setLayout(new GridLayout(4, 2));
+
+        formularioPanel.add(new JLabel("Campo 1 (Opción 4):"));
+        formularioPanel.add(new JTextField(15));
+
+        formularioPanel.add(new JLabel("Campo 2 (Opción 4):"));
+        formularioPanel.add(new JTextField(15));
+
+        agregarBotonesFormulario(formularioPanel, "Formulario 4");
+        return formularioPanel;
+    }
+
+    // Método para agregar los botones de "Enviar" y "Cancelar" a los formularios
+    private void agregarBotonesFormulario(JPanel formularioPanel, String nombreFormulario) {
         // Botón para enviar
         JButton enviarButton = new JButton("Enviar");
         enviarButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(MiAplicacion.this, "Formulario enviado.");
+                JOptionPane.showMessageDialog(MiAplicacion.this, nombreFormulario + " enviado.");
             }
         });
         formularioPanel.add(enviarButton);
@@ -84,13 +152,10 @@ public class MiAplicacion extends JFrame {
         cancelarButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Volver al panel de opciones
                 cardLayout.show(panelPrincipal, "Opciones");
             }
         });
         formularioPanel.add(cancelarButton);
-
-        return formularioPanel;
     }
 
     
